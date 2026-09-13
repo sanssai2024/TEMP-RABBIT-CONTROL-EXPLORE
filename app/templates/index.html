@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% from "partials/components.html" import rabbit %}
+{% block content %}
+<section class="intro">
+  <p class="eyebrow">CURIOSITY, WITH INTENTION</p>
+  <h1>Same curiosity. <span>Different intentions.</span></h1>
+  <p>One idea in. One decision out. Give your curiosity a direction.</p>
+</section>
+<section class="mode-duo" aria-label="Two paths for your questions">
+  <article class="path-card control">
+    <div class="path-top"><span class="eyebrow">01 / CONTROL PATH</span><span class="path-tag">PROTECT YOUR ATTENTION</span></div>
+    {{ rabbit('control') }}
+    <div class="path-copy"><p class="eyebrow">THE INNOCENT BUNNY</p><h2>Stay Focused.<br>Come Back Stronger.</h2><p>Not every question needs an answer today.<br>Find what deserves your attention right now.</p>
+    <a class="button primary" href="/ideas/new?mode=CONTROL">Choose CONTROL <span aria-hidden="true">↗</span></a></div>
+    <div class="intent-words" aria-label="CONTROL personality"><span>Focus</span><span>Relevant</span><span>Safe</span></div>
+    <div class="path-reflection"><span class="eyebrow">BEFORE YOU FOLLOW THE QUESTION</span><p>Is this question worth<br>my attention right now?</p><div class="path-bottom"><span>Clarify the question</span><span>Decide what matters</span></div></div>
+    <p class="path-quote">“Not every question needs an answer today.”</p>
+  </article>
+  <div class="question-bridge"><span class="bridge-caption">SAME CURIOSITY<br>DIFFERENT INTENTIONS</span><span class="question-core">Questions<br>connect<br>two sides</span><span class="bridge-caption">A CLEARER<br>DIRECTION</span></div>
+  <article class="path-card explore">
+    <div class="path-top"><span class="eyebrow">02 / EXPLORE</span><span class="path-tag">HUNT THE IDEA</span></div>
+    {{ rabbit('explore') }}
+    <div class="path-copy"><p class="eyebrow">PREDATOR MODE</p><h2>Go Deeper.<br>Find What Others Miss.</h2><p>When a question is worth the pursuit,<br>follow its branches. Challenge its assumptions.</p>
+    <a class="button primary" href="/ideas/new?mode=EXPLORE">Choose EXPLORE <span aria-hidden="true">↗</span></a></div>
+    <div class="intent-words" aria-label="EXPLORE personality"><span>Hunt</span><span>Dig deeper</span><span>Uncover</span></div>
+    <div class="path-reflection"><span class="eyebrow">FOLLOW THE QUESTION TO ITS CORE</span><p>Look closer.<br>Find the unexpected connection.</p><div class="path-bottom"><span>Enter the black hole</span><span>Find new connections</span></div></div>
+    <p class="path-quote">“Curiosity is a force. Use it well.”</p>
+  </article>
+</section>
+<section class="journey" aria-label="The thinking process"><span class="eyebrow">FOLLOW THE QUESTION</span><p>Questions <span>→</span> Intention <span>→</span> Branches &amp; connections <span>→</span> A considered decision</p><a href="/ideas">Return to your ideas <span aria-hidden="true">↗</span></a></section>
+{% endblock %}
+

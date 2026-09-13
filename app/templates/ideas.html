@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% from "partials/components.html" import badge %}
+{% block title %}Ideas · TEMP_RABBIT{% endblock %}
+{% block content %}
+<div class="section-header page-heading"><div><p class="eyebrow">YOUR CURIOSITY, COLLECTED</p><h1>Ideas <span class="count">{{ ideas|length }}</span></h1><p>A place for what matters now, and what can wait.</p></div><a class="button primary" href="/ideas/new">+ New Idea</a></div>
+<section class="card collection" aria-label="Saved ideas">
+  {% if ideas %}
+  <div class="collection-heading"><span>QUESTION / IDEA</span><span>STATUS &amp; DECISION</span></div>
+  <ul class="idea-list">
+    {% for idea in ideas %}
+    {% set recent = idea.processings|sort(attribute='processed_at')|last %}
+    <li class="idea-item"><a href="/ideas/{{ idea.id }}"><span class="idea-number">{{ '%02d'|format(loop.index) }}</span><div class="idea-text"><strong>{{ idea.original_idea[:160] }}{% if idea.original_idea|length > 160 %}…{% endif %}</strong><div class="meta-row"><span>Created {{ idea.created_at.strftime('%d %b %Y') }}</span><span>Updated {{ idea.updated_at.strftime('%d %b %Y') }}</span>{% if recent %}<span>Processed {{ recent.processed_at.strftime('%d %b %Y · %H:%M') }}</span>{% endif %}</div></div><div class="idea-badges">{% if recent %}{{ badge(recent.mode) }}{% endif %}{{ badge(idea.status, 'status-') }}{{ badge(idea.current_decision or 'UNDECIDED', 'decision-') }}</div><span class="row-arrow" aria-hidden="true">↗</span></a></li>
+    {% endfor %}
+  </ul>
+  {% else %}<div class="empty-state"><div class="small-orbit" aria-hidden="true">?</div><h2>A little space for your next question.</h2><p>No ideas yet. Start with your first one.</p><a class="button primary" href="/ideas/new">Capture an idea ↗</a></div>{% endif %}
+</section>
+{% endblock %}
+

@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>{% block title %}TEMP_RABBIT{% endblock %}</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="topbar"><div class="container nav-wrap">
+    <a href="/" class="brand">TEMP_RABBIT<span class="brand-caption">A SPACE FOR QUESTIONS</span></a>
+    <nav aria-label="Main navigation">
+      <a href="/" {% if request.url.path == '/' %}aria-current="page"{% endif %}>Overview</a>
+      <a href="/ideas" {% if request.url.path == '/ideas' %}aria-current="page"{% endif %}>Ideas</a>
+      <a class="button secondary" href="/ideas/new" {% if request.url.path == '/ideas/new' %}aria-current="page"{% endif %}>+ New Idea</a>
+    </nav>
+  </div></header>
+  <main id="main" class="container page-shell" tabindex="-1">{% block content %}{% endblock %}</main>
+  <footer class="container footer"><span>Same curiosity. Different intentions.</span><span>CONTROL protects attention. EXPLORE hunts the idea.</span></footer>
+</body>
+</html>
+

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% from "partials/components.html" import badge, text_list %}
+{% block title %}Idea Detail · TEMP_RABBIT{% endblock %}
+{% block content %}
+{% set active_mode = latest.mode|lower if latest else 'control' %}
+<div class="detail-layout {{ active_mode }}">
+  <div class="section-header"><a class="back-link" href="/ideas">← Back to Ideas</a><span class="eyebrow">IDEA / {{ '%03d'|format(idea.id) }}</span></div>
+  {% if error %}<div class="alert error" role="alert">{{ error }}</div>{% endif %}
+  <section class="card idea-focus">
+    <div class="section-header"><p class="eyebrow">{{ 'CORE QUESTION' if result else 'ORIGINAL IDEA' }}</p><div class="badge-row">{{ badge(idea.status, 'status-') }}{% if latest %}{{ badge(latest.mode) }}{% endif %}</div></div>
+    <h1>{{ result.core_question if result else idea.original_idea }}</h1>
+    <p class="meta-row">Created {{ idea.created_at.strftime('%d %b %Y') }} · Updated {{ idea.updated_at.strftime('%d %b %Y') }}</p>
+    {% if result %}<div class="original-idea"><h2>Original Idea</h2><p class="user-text">{{ idea.original_idea }}</p></div>{% endif %}
+  </section>
+  <div class="detail-columns"><div class="result-main">
+  {% if result %}
+    <section class="card result-card"><div class="section-header"><p class="eyebrow">{{ latest.mode }} / LATEST RESULT</p><span class="muted">{{ latest.processed_at.strftime('%d %b %Y · %H:%M') }}</span></div><h2>Clean Idea</h2><p>{{ result.clean_idea }}</p>
+      <div class="result-section"><h2>Branches</h2><div class="branches">{% for branch in result.branches %}<article class="branch"><span class="branch-number">{{ '%02d'|format(loop.index) }}</span><div><h3>{{ branch.title }}</h3><p>{{ branch.description }}</p><small>Relevance: {{ branch.relevance }}</small></div></article>{% endfor %}</div></div>
+      {{ text_list('Connections', result.connections) }}
+      <section class="result-section"><h3>Feasibility</h3><dl class="facts"><div><dt>Practical</dt><dd>{{ result.feasibility.practical }}</dd></div><div><dt>Technical difficulty</dt><dd>{{ result.feasibility.technical_difficulty }}</dd></div><div><dt>Knowledge difficulty</dt><dd>{{ result.feasibility.knowledge_difficulty }}</dd></div><div><dt>Overall complexity</dt><dd>{{ result.feasibility.overall_complexity }}</dd></div></dl></section>
+      <div class="analysis-grid">{{ text_list('Knowledge Gaps', result.knowledge_gaps) }}{{ text_list('Risks', result.risks) }}</div>
+      {{ text_list('Assumptions', result.assumptions) }}
+      <section class="result-section"><h3>Scores <span class="muted">/ 10</span></h3><p class="field-help">AI assessments; higher effort and rabbit-hole risk mean greater demands on your attention.</p><div class="scores">{% for key, label in [('usefulness', 'Usefulness'), ('feasibility', 'Feasibility'), ('learning_value', 'Learning Value'), ('novelty', 'Novelty'), ('effort', 'Effort'), ('rabbit_hole_risk', 'Rabbit-Hole Risk')] %}<div class="score"><label for="score-{{ key }}">{{ label }} <strong>{{ result.scores[key] }}</strong></label><meter id="score-{{ key }}" min="0" max="10" value="{{ result.scores[key] }}">{{ result.scores[key] }} out of 10</meter></div>{% endfor %}</div></section>
+    </section>
+  {% else %}<section class="card"><p class="eyebrow">ROOM TO THINK</p><h2>Your idea is saved.</h2><p>No processing result yet. Choose CONTROL or EXPLORE below to take the next step.</p></section>{% endif %}
+  <section class="card history-box"><p class="eyebrow">HOW THE IDEA EVOLVED</p><h2>Processing History</h2>
+    {% if processings %}<ol class="timeline">{% for processing in processings %}<li class="{{ processing.mode|lower }}"><div class="section-header"><div class="badge-row">{{ badge(processing.mode) }}{{ badge(processing.decision or 'UNDECIDED', 'decision-') }}</div><time datetime="{{ processing.processed_at.isoformat() }}">{{ processing.processed_at.strftime('%d %b %Y · %H:%M') }}</time></div><p class="history-question">{{ processing.structured_result_json.get('core_question', '') }}</p><p>{{ processing.structured_result_json.get('decision_reason', '') }}</p><p><strong>Next:</strong> {{ processing.next_action or 'No next action recorded.' }}</p></li>{% endfor %}</ol>{% else %}<p class="muted">No processing history yet.</p>{% endif %}
+  </section>
+  </div><aside class="detail-sidebar">
+    {% if result %}<section class="card decision-panel"><p class="eyebrow">A CONSIDERED DECISION</p><h2>Decision</h2><div class="decision-badge decision-{{ result.decision|lower }}">{{ result.decision }}</div><h3>Decision Reason</h3><p>{{ result.decision_reason }}</p><div class="next-action"><h3>Next Action</h3><p>{{ result.next_action }}</p></div></section>{% endif %}
+    <section class="card action-panel"><h2>Choose the next step</h2><form action="/ideas/{{ idea.id }}/reprocess" method="post"><label for="reprocess_mode">Reprocess idea</label><select name="mode" id="reprocess_mode">{% for mode in ['CONTROL', 'EXPLORE'] %}<option value="{{ mode }}" {% if latest and latest.mode == mode %}selected{% endif %}>{{ mode }}</option>{% endfor %}</select><button class="button primary" type="submit">Reprocess ↗</button></form><form action="/ideas/{{ idea.id }}/status" method="post"><label for="status">Change status</label><select name="status" id="status">{% for status in ['INBOX', 'ACTIVE', 'EXPLORING', 'PARKED', 'COMPLETED', 'DEAD'] %}<option value="{{ status }}" {% if idea.status == status %}selected{% endif %}>{{ status }}</option>{% endfor %}{% if idea.status == 'PROCESSING' %}<option value="PROCESSING" selected>PROCESSING</option>{% endif %}</select><button class="button secondary" type="submit">Update Status</button></form></section>
+    <section class="card notes-box"><p class="eyebrow">MARGIN THOUGHTS</p><h2>User Notes</h2>{% if notes %}<ul class="notes-list">{% for note in notes %}<li><p class="user-text">{{ note.note_text }}</p><time datetime="{{ note.created_at.isoformat() }}">{{ note.created_at.strftime('%d %b %Y · %H:%M') }}</time></li>{% endfor %}</ul>{% else %}<p class="muted">No notes yet.</p>{% endif %}<form action="/ideas/{{ idea.id }}/notes" method="post"><label for="note_text">Add note</label><textarea id="note_text" name="note_text" rows="4" placeholder="A thought to return to…" required></textarea><button class="button secondary" type="submit">Save Note</button></form></section>
+  </aside></div>
+</div>
+{% endblock %}
+

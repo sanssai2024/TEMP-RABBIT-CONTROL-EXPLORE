@@ -1,0 +1,18 @@
+{% macro rabbit(mode) %}
+{# Decorative vector placeholder. Replace this slot with approved mascot artwork. #}
+<div class="rabbit-slot {{ mode }}-rabbit" aria-hidden="true">
+  <div class="orbit"></div>
+  <svg viewBox="0 0 240 260" fill="none" focusable="false">
+    <defs><linearGradient id="rabbit-shade-{{ mode }}" x1="0" y1="0" x2="1" y2=".7"><stop class="rabbit-highlight"/><stop offset=".55" class="rabbit-midtone"/><stop offset="1" class="rabbit-shadow"/></linearGradient></defs>
+    <path class="rabbit-body" d="M67 236C49 203 58 160 84 148C69 129 72 110 82 98C68 62 69 20 81 16C95 12 108 60 111 93L127 91C130 52 144 8 157 15C172 25 153 80 145 102C171 118 180 144 165 163C183 179 192 209 185 236Z"/>
+    <path class="rabbit-line" d="M84 37L95 95M151 36L137 96M79 175C108 157 140 180 127 224M143 174C166 183 169 211 163 231M67 236H190"/>
+    {% if mode == 'explore' %}<path class="rabbit-eye" d="M94 123L112 130L97 132ZM132 130L149 121L147 131Z"/>{% else %}<ellipse class="rabbit-eye" cx="102" cy="128" rx="3" ry="4"/><ellipse class="rabbit-eye" cx="141" cy="126" rx="3" ry="4"/>{% endif %}
+    <path class="rabbit-line" d="M116 143L121 147L127 142M121 147L121 153"/>
+  </svg>
+</div>
+{% endmacro %}
+{% macro badge(value, prefix='') %}<span class="pill {{ prefix }}{{ value|lower }}">{{ value }}</span>{% endmacro %}
+{% macro text_list(title, items) %}
+<section class="result-section"><h3>{{ title }}</h3><ul class="text-list">{% for item in items %}<li>{{ item }}</li>{% else %}<li class="muted">None identified in this result.</li>{% endfor %}</ul></section>
+{% endmacro %}
+
